@@ -1,0 +1,152 @@
+#######################################
+# Syntax Coloring Map For DuoBLE
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+# DuoBLE.h
+DueBLE	KEYWORD1
+
+# BLEUuid.h
+UUID	KEYWORD1
+
+# BLEService.h
+BLEServiceCallbackReason	KEYWORD1
+BLEServiceListener	KEYWORD1
+BLEService	KEYWORD1
+
+# BLECharacteristic.h
+BLECharacteristicCallbackReason	KEYWORD1
+BLECharacteristicListener	KEYWORD1
+
+# BLEAttribute.h
+BLEAttribute	KEYWORD1
+BLERecipient	KEYWORD1
+
+# HRS.h
+HRSCallbackReason	KEYWORD1
+HRS	KEYWORD1
+
+# DIS.h
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+# DuoBLE.h
+BLE_connected	KEYWORD2
+BLE_disconnected	KEYWORD2
+bleGattServerRead	KEYWORD2
+bleGattServerWrite	KEYWORD2
+bleConnected	KEYWORD2
+bleDisconnected	KEYWORD2
+begin	KEYWORD2
+end	KEYWORD2
+setAdvertisementParameters	KEYWORD2
+startAdvertising	KEYWORD2
+stopAdvertising	KEYWORD2
+advertisingDataClear	KEYWORD2
+advertisingDataSetFlags	KEYWORD2
+advertisingDataAdd16bitUUIDs	KEYWORD2
+advertisingDataAdd128bitUUID	KEYWORD2
+advertisingDataAddName	KEYWORD2
+advertisingDataAdd16BitServiceData	KEYWORD2
+advertisingDataAdd128BitServiceData	KEYWORD2
+advertisingDataAddManufacturerServiceData	KEYWORD2
+advertisingIBeacon	KEYWORD2
+setPreferredConnectionParameters	KEYWORD2
+disconnectFromCentral	KEYWORD2
+isConnectedToCentral	KEYWORD2
+setNamesetAppearance	KEYWORD2
+addService	KEYWORD2
+
+# BLEUuid.h
+str	KEYWORD2
+size	KEYWORD2
+
+# BLEService.h
+connected	KEYWORD2
+disconnected	KEYWORD2
+addCharacteristic	KEYWORD2
+uuid	KEYWORD2
+setListener	KEYWORD2
+setCallback	KEYWORD2
+
+# BLECharacteristic.h
+preRead	KEYWORD2
+postRead	KEYWORD2
+postWrite	KEYWORD2
+notificationsEnabled	KEYWORD2
+notificationsDisabled	KEYWORD2
+indicationsEnabled	KEYWORD2
+indicationsDisabled	KEYWORD2
+setValue	KEYWORD2
+getValue	KEYWORD2
+size	KEYWORD2
+# setListener  (dup)
+# setCallback  (dup)
+sendIndicate	KEYWORD2
+sendNotify	KEYWORD2
+
+# BLEAttribute.h
+
+# assert.h
+assert	KEYWORD2
+
+# HRS.h
+sensorConnected	KEYWORD2
+setRespirationRateInterval	KEYWORD2
+clearRespirationRateInterval	KEYWORD2
+setEnergyExpended	KEYWORD2
+clearEnergyExpended	KEYWORD2
+setHeartRate16Bit	KEYWORD2
+setHeartRate8bit	KEYWORD2
+sendNotify	KEYWORD2
+setCallback	KEYWORD2
+
+# DIS.h
+addDeviceInfo	KEYWORD2
+
+#######################################
+# Instances (	KEYWORD2)
+#######################################
+
+# DuoBLE.h
+DuoBLE	KEYWORD2
+
+# DIS.h
+DIS	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+# DuoBLE.h
+ADVERTISEMENT	LITERAL1
+SCAN_RESPONSE	LITERAL1
+
+# BLEService.h
+CONNECTED	LITERAL1
+CONNECTION_ERROR	LITERAL1
+DISCONNECTED	LITERAL1
+
+# BLECharacteristic.h
+PREREAD	LITERAL1
+POSTREAD	LITERAL1
+POSTWRITE	LITERAL1
+NOTIFICATIONS_ENABLED	LITERAL1
+NOTIFICATIONS_DISABLED	LITERAL1
+INDICATIONS_ENABLED	LITERAL1
+INDICATIONS_DISABLED	LITERAL1
+ATT_PROPERTY_READ	LITERAL1
+ATT_PROPERTY_WRITE_WITHOUT_RESPONSE	LITERAL1
+ATT_PROPERTY_WRITE	LITERAL1
+ATT_PROPERTY_NOTIFY	LITERAL1
+ATT_PROPERTY_INDICATE	LITERAL1
+
+# HRS.h
+HRS_RESPIRATION_RATE_CLEAR	LITERAL1
+HRS_SERVICE_STARTED	LITERAL1
+HRS_SERVICE_STOPPED	LITERAL1
