@@ -22,12 +22,6 @@
 #define DEBUG_PRINT2(x,y)    ;
 #endif
 
-// **** Forward declarations
-static uint16_t bleGattServerRead(uint16_t handle, uint8_t * buffer, uint16_t buffer_size);
-static int bleGattServerWrite(uint16_t handle, uint8_t *buffer, uint16_t buffer_size);
-static void bleConnected(BLEStatus_t status, uint16_t handle);
-static void bleDisconnected(uint16_t handle);
-
 // Global Variables
 bd_addr_t null_address = {0,0,0,0,0,0};
 
@@ -131,9 +125,9 @@ void DuoBLE_::setAdvertisementParameters(uint16_t adv_int_min ,
                                          bd_addr_t direct_address,
                                          uint8_t channel_map,
                                          uint8_t filter_policy) {
-  assert(adv_int_min>=MS(7.5) && adv_int_min<=MS(4000), "Invalid Min Adv. Int");
-  assert(adv_int_max>=MS(7.5) && adv_int_max<=MS(4000) && adv_int_min <= adv_int_max, "Invalid Min Adv. Int");
-  assert( (adv_type!=BLE_GAP_ADV_TYPE_ADV_SCAN_IND && adv_type!=BLE_GAP_ADV_TYPE_ADV_NONCONN_IND) || (adv_int_min>=MS(100)), "Adv. must be > 100ms");
+  dble_assert(adv_int_min>=MS(7.5) && adv_int_min<=MS(4000), "Invalid Min Adv. Int");
+  dble_assert(adv_int_max>=MS(7.5) && adv_int_max<=MS(4000) && adv_int_min <= adv_int_max, "Invalid Min Adv. Int");
+  dble_assert( (adv_type!=BLE_GAP_ADV_TYPE_ADV_SCAN_IND && adv_type!=BLE_GAP_ADV_TYPE_ADV_NONCONN_IND) || (adv_int_min>=MS(100)), "Adv. must be > 100ms");
   hal_btstack_setAdvertisementParams(adv_int_min, adv_int_max, adv_type, direct_address_typ, direct_address, channel_map, filter_policy);
 }
 
@@ -158,7 +152,7 @@ void DuoBLE_::advertisingDataClear(adv_packet_t type) {
 
 void DuoBLE_::advertisingDataAddFlags(adv_packet_t type, uint8_t flags) {
   int startIdx = m_advDataLength[type];
-  assert(startIdx+3<31, "Data Won't Fit in Adv. Packet");
+  dble_assert(startIdx+3<31, "Data Won't Fit in Adv. Packet");
   m_advData[type][startIdx] = 2;
   m_advData[type][startIdx+1] = BLE_GAP_AD_TYPE_FLAGS;
   m_advData[type][startIdx+2] = flags;
@@ -172,7 +166,7 @@ void DuoBLE_::advertisingDataSetFlags(uint8_t flags) {
 void DuoBLE_::advertisingDataAdd16bitUUIDs(adv_packet_t type, uint16_t ids[], uint8_t number, uint8_t kind) {
   int startIdx = m_advDataLength[type];
   int totalBytes = 2+2*number;  // Length Byte + Type byte + data (2 bytes each)
-  assert(startIdx+totalBytes<31, "Data Won't Fit in Adv. Packet");
+  dble_assert(startIdx+totalBytes<31, "Data Won't Fit in Adv. Packet");
   m_advData[type][startIdx] = totalBytes-1;  // Don't count this byte itself
   m_advData[type][startIdx+1] = kind;  // Type
   for(int i=0;i<number;i++) {
@@ -183,10 +177,10 @@ void DuoBLE_::advertisingDataAdd16bitUUIDs(adv_packet_t type, uint16_t ids[], ui
 }
 
 void DuoBLE_::advertisingDataAdd128bitUUID(adv_packet_t type, UUID& id, uint8_t kind) {
-  assert(id.size()==16, "Requires 128bit UUID");
+  dble_assert(id.size()==16, "Requires 128bit UUID");
   int startIdx = m_advDataLength[type];
   int totalBytes = 2+16;  // Length Byte + Type byte + data (2 bytes each)
-  assert(startIdx+totalBytes<31, "Data Won't Fit in Adv. Packet");
+  dble_assert(startIdx+totalBytes<31, "Data Won't Fit in Adv. Packet");
   m_advData[type][startIdx] = totalBytes-1;  // Don't count this byte itself
   m_advData[type][startIdx+1] = kind;  // Type
   // Little Endian Order
@@ -199,7 +193,7 @@ void DuoBLE_::advertisingDataAdd128bitUUID(adv_packet_t type, UUID& id, uint8_t 
 void DuoBLE_::advertisingDataAddName(adv_packet_t type, const char *name, uint8_t kind) {
   int length = strlen(name);
   int startIdx = m_advDataLength[type];
-  assert(startIdx+2+length<31, "Data Won't Fit in Adv. Packet");
+  dble_assert(startIdx+2+length<31, "Data Won't Fit in Adv. Packet");
   m_advData[type][startIdx] = length+1;
   m_advData[type][startIdx+1] = kind;
   memcpy((m_advData[type]+startIdx+2), name, length);
@@ -209,7 +203,7 @@ void DuoBLE_::advertisingDataAddName(adv_packet_t type, const char *name, uint8_
 void DuoBLE_::advertisingDataAdd16BitServiceData(adv_packet_t type,  uint16_t id,  uint8_t data[], uint8_t size) {
   int startIdx = m_advDataLength[type];
   int totalBytes = 2+2+size;  // Length Byte + Type byte + UUID size + data Size
-  assert(startIdx+totalBytes<31, "Data Won't Fit in Adv. Packet");
+  dble_assert(startIdx+totalBytes<31, "Data Won't Fit in Adv. Packet");
   m_advData[type][startIdx] = totalBytes-1;  // Don't count this byte itself
   m_advData[type][startIdx+1] = BLE_GAP_AD_TYPE_SERVICE_DATA;  // Type
   // Little Endian Order
@@ -220,10 +214,10 @@ void DuoBLE_::advertisingDataAdd16BitServiceData(adv_packet_t type,  uint16_t id
 }
 
 void DuoBLE_::advertisingDataAdd128BitServiceData(adv_packet_t type,  UUID& id,  uint8_t data[], uint8_t size) {
-  assert(id.size()==16, "Requires 128bit UUID");
+  dble_assert(id.size()==16, "Requires 128bit UUID");
   int startIdx = m_advDataLength[type];
   int totalBytes = 2+16+size;
-  assert(startIdx+totalBytes<31, "Data Won't Fit in Adv. Packet");
+  dble_assert(startIdx+totalBytes<31, "Data Won't Fit in Adv. Packet");
   m_advData[type][startIdx] = totalBytes-1; // Omit this byte itself
   m_advData[type][startIdx+1] = BLE_GAP_AD_TYPE_SERVICE_DATA_128BIT_UUID;
   // Little Endian Order
@@ -237,7 +231,7 @@ void DuoBLE_::advertisingDataAdd128BitServiceData(adv_packet_t type,  UUID& id, 
 void DuoBLE_::advertisingDataAddManufacturerServiceData(adv_packet_t type,  uint16_t manufacturer,  uint8_t data[], uint8_t size) {
   int startIdx = m_advDataLength[type];
   int totalBytes = 2+2+size;  // Length Byte + Type byte + UUID size + data Size
-  assert(startIdx+totalBytes<31, "Data Won't Fit in Adv. Packet");
+  dble_assert(startIdx+totalBytes<31, "Data Won't Fit in Adv. Packet");
   m_advData[type][startIdx] = totalBytes-1;  // Don't count this byte itself
   m_advData[type][startIdx+1] = BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA;  // Type
   // Little Endian Order
@@ -252,8 +246,8 @@ void DuoBLE_::advertisingIBeacon(UUID& beaconID, uint16_t major, uint16_t minor)
   // REVIEW: Test w/ a beacon finder
   int type = ADVERTISEMENT;
   int startIdx = m_advDataLength[type];
-  assert(startIdx==0, "Adv. Packet must only be used for Beacon");
-  assert(beaconID.m_size == 16, "Beacons must include a 128-bit uuid");
+  dble_assert(startIdx==0, "Adv. Packet must only be used for Beacon");
+  dble_assert(beaconID.m_size == 16, "Beacons must include a 128-bit uuid");
 
   m_advData[type][0] = 0x1A; // Size: 26 bytes long
   m_advData[type][1] = 0xFF; // Type: Manu specific data
@@ -382,6 +376,7 @@ uint16_t DuoBLE_::gattServerRead(uint16_t value_handle, uint8_t * buffer, uint16
       }
     }
   }
+  return 0;   // No match found
 }
 
 int DuoBLE_::gattServerWrite(uint16_t value_handle, uint8_t *buffer, uint16_t size) {
@@ -543,12 +538,12 @@ bool DuoBLE_::isConnectedToCentral() {
 uint16_t bleGattServerRead(uint16_t handle, uint8_t * buffer, uint16_t buffer_size) {
   return DuoBLE.gattServerRead(handle, buffer, buffer_size);
 }
-static int bleGattServerWrite(uint16_t handle, uint8_t *buffer, uint16_t buffer_size) {
+int bleGattServerWrite(uint16_t handle, uint8_t *buffer, uint16_t buffer_size) {
   return DuoBLE.gattServerWrite(handle, buffer, buffer_size);
 }
-static void bleConnected(BLEStatus_t status, uint16_t handle) {
+void bleConnected(BLEStatus_t status, uint16_t handle) {
   DuoBLE.connected(status, handle);
 }
-static void bleDisconnected(uint16_t handle) {
+void bleDisconnected(uint16_t handle) {
   DuoBLE.disconnected(handle);
 }

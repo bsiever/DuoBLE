@@ -8,17 +8,17 @@
 #ifndef _ASSERT_h_
 #define _ASSERT_h_
 
-#define DEBUG
+#define DEBUG_DBLE
 
-#ifdef DEBUG
-void __assert(const char *file, int line, const char *funct, const char *expres, const char * message);
+#ifdef DEBUG_DBLE
+void __dble_assert(const char *file, int line, const char *funct, const char *expres, const char * message);
 // Assertion assistance via: https://gist.github.com/jlesech/3089916
 // (GNU Assert def from assert.h)
-# define assert(__e, message) ((__e) ? (void)0 : __assert (__FILE__, __LINE__, \
+# define dble_assert(__e, message) ((__e) ? (void)0 : __dble_assert (__FILE__, __LINE__, \
                                                        __FUNCTION__, #__e, message))
 
 #else
-# define assert(__e, message) ;
+# define dble_assert(__e, message) ;
 #endif
 
 #endif

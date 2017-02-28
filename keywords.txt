@@ -92,8 +92,8 @@ sendNotify	KEYWORD2
 
 # BLEAttribute.h
 
-# assert.h
-assert	KEYWORD2
+# dble_assert.h
+dble_assert	KEYWORD2
 
 # HRS.h
 sensorConnected	KEYWORD2

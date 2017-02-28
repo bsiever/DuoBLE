@@ -1,4 +1,4 @@
-/** 
+/**
  * This is a library to simplify Bluetooth Low Energy for the RedBear Duo (and btstack).
  *
  * Copyright (c) 2017 Bill Siever.  All rights reserved.
@@ -14,12 +14,11 @@
 #include"BLEService.h"
 #include"BLECharacteristic.h"
 
-#include"assert.h"
+#include"dble_assert.h"
 
 #if !defined(PLATFORM_DUO_PRODUCTION)
 #error "DuoBLE.h is only for use with RedBear Duo boards"
 #endif
-
 
 // Simple C Library Client Callbacks
 // Potential Callbacks for C-based API
@@ -27,16 +26,18 @@
 extern void BLE_connected() __attribute__((weak));
 extern void BLE_disconnected() __attribute__((weak));
 
-// C-Style Callback dispatch functions (to match btstack's callback structure)
-static uint16_t bleGattServerRead(uint16_t handle, uint8_t * buffer, uint16_t buffer_size);
-static int bleGattServerWrite(uint16_t handle, uint8_t *buffer, uint16_t buffer_size);
-static void bleConnected(BLEStatus_t status, uint16_t handle);
-static void bleDisconnected(uint16_t handle);
-
 // *** Convenience Macros
 // Convert time to 1.25ms intervals (rounds down)
 #define MS(x) (x*4/5)
 #define MS10(x) (x/10)
+
+
+// **** Forward declarations for internal event handlers
+uint16_t bleGattServerRead(uint16_t handle, uint8_t * buffer, uint16_t buffer_size);
+int bleGattServerWrite(uint16_t handle, uint8_t *buffer, uint16_t buffer_size);
+void bleConnected(BLEStatus_t status, uint16_t handle);
+void bleDisconnected(uint16_t handle);
+
 
 #define BLE_INVALID_CONN_HANDLE 0xFFFF
 

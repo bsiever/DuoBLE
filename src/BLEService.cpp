@@ -8,7 +8,7 @@
 #include"BLEService.h"
 #include"BLECharacteristic.h"
 
-BLEService::BLEService(const char *uuidString) : m_uuid(uuidString), m_listenerObject(NULL), m_characteristicChain(NULL), m_nextService(NULL), m_callbackFunction(NULL)  {
+BLEService::BLEService(const char *uuidString) : m_uuid(uuidString), m_listenerObject(NULL), m_callbackFunction(NULL), m_characteristicChain(NULL), m_nextService(NULL) {
 
 }
 

@@ -12,8 +12,10 @@
 
 HRS::HRS(uint8_t sensorLocation, bool oneByteFormat, bool sensorContactFeature, bool respirationFeature, bool energyExpendedFeature) : BLEService("180D"), m_hrm("2A37", ATT_PROPERTY_NOTIFY,7,2),
 m_sensorLocation("2A38", ATT_PROPERTY_READ, 1,1), m_controlPoint("2A39",ATT_PROPERTY_WRITE, 1,1),
-m_oneByteFormat(oneByteFormat), m_sensorContactFeature(sensorContactFeature), m_respirationFeature(respirationFeature), m_energyExpendedFeature(energyExpendedFeature),
-m_energyExpended(0xFFFF), m_respirationRate(0xFFFF), m_sensorConnected(false), m_heartRate1Byte(0), m_heartRate2Bytes(0), m_callbackFunction(NULL)
+m_sensorContactFeature(sensorContactFeature),  m_respirationFeature(respirationFeature),
+m_energyExpendedFeature(energyExpendedFeature), m_oneByteFormat(oneByteFormat),
+m_energyExpended(0xFFFF), m_respirationRate(0xFFFF), m_sensorConnected(false),
+m_heartRate1Byte(0), m_heartRate2Bytes(0), m_callbackFunction(NULL)
  {
   addCharacteristic(m_hrm);
   m_hrm.setListener(this);

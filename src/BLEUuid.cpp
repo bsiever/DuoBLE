@@ -8,12 +8,12 @@
 
 #include "Arduino.h"
 #include "BLEUuid.h"
-#include"assert.h"
+#include"dble_assert.h"
 
 UUID::UUID(const char *uuidString) {
   this->_str = uuidString;
   int len = strlen(uuidString);
-  assert(len == 4 || len==36, "Invalid UUID. Format is either XXXX or XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX");
+  dble_assert(len == 4 || len==36, "Invalid UUID. Format is either XXXX or XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX");
   if(len == 4) {
     this->m_size = 2;
     char temp[] = {0, 0, 0};

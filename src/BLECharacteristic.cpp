@@ -6,7 +6,7 @@
  *
  */
 #include"BLECharacteristic.h"
-#include"assert.h"
+#include"dble_assert.h"
 #include<string.h>
 
 #include"btstack_hal.h"
@@ -15,11 +15,27 @@
 
 
 BLECharacteristic::BLECharacteristic(const char *uuidString, uint16_t properties, uint16_t maxSize, uint16_t minSize) :
-  BLEAttribute(), m_uuid(uuidString), m_properties(properties), m_minSize(minSize), m_maxSize(maxSize), m_size(minSize),
-  m_listenerObject(NULL),  m_callbackFunction(NULL), m_next(NULL), m_notifications(false), m_indications(false) {
+  BLEAttribute(), m_uuid(uuidString),  m_minSize(minSize), m_maxSize(maxSize), m_size(minSize), m_properties(properties),
+  m_notifications(false), m_indications(false), m_listenerObject(NULL),  m_callbackFunction(NULL), m_next(NULL) {
+
+/*
+UUID m_uuid;
+uint16_t m_minSize;
+uint16_t m_maxSize;
+uint16_t m_size;
+uint8_t m_value[MAX_ATT_SZ];
+uint16_t m_properties;
+bool m_notifications;
+bool m_indications;
+BLECharacteristicListener *m_listenerObject;
+BLECharacteristicCallback m_callbackFunction;
+// Pointer to C-Style callback function
+BLECharacteristic *m_next;
+
+*/
   int stackBottom;
-  assert((int)this < (int)&stackBottom, "These objects should not be allocated on the stack (not local variables). Allocate as global or with new.");
-  assert(maxSize<=MAX_ATT_SZ && minSize>0 && minSize <= maxSize, "Invalid attribute size");
+  dble_assert((int)this < (int)&stackBottom, "These objects should not be allocated on the stack (not local variables). Allocate as global or with new.");
+  dble_assert(maxSize<=MAX_ATT_SZ && minSize>0 && minSize <= maxSize, "Invalid attribute size");
   memset(m_value, 0, MAX_ATT_SZ);
 }
 
@@ -62,13 +78,13 @@ void BLECharacteristic::setCallback(BLECharacteristicCallback callback) {
 }
 
 void BLECharacteristic::sendIndicate() {
-  assert(m_properties & ATT_PROPERTY_INDICATE, "Characteristic doesn't support indicate");
+  dble_assert(m_properties & ATT_PROPERTY_INDICATE, "Characteristic doesn't support indicate");
   if(m_indications && hal_btstack_attServerCanSend())
     hal_btstack_attServerSendIndicate(m_handle, m_value, m_size);
 }
 
 void BLECharacteristic::sendNotify() {
-  assert(m_properties & ATT_PROPERTY_NOTIFY , "Characteristic doesn't support notify");
+  dble_assert(m_properties & ATT_PROPERTY_NOTIFY , "Characteristic doesn't support notify");
   if(m_notifications && hal_btstack_attServerCanSend())
     hal_btstack_attServerSendNotify(m_handle, m_value, m_size);
 }

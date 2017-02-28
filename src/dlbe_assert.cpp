@@ -7,11 +7,11 @@
  */
 #include<Arduino.h>
 
-#include"assert.h"// handle diagnostic informations given by assertion and abort program execution:
+#include"dble_assert.h"// handle diagnostic informations given by assertion and abort program execution:
 
 #ifdef DEBUG
 
-void __assert(const char *file, int line, const char *funct, const char *expres, const char * message) {
+void __dble_assert(const char *file, int line, const char *funct, const char *expres, const char * message) {
     // transmit diagnostic informations through serial link.
     Serial.begin(9600);
     Serial.print("Assertion failure in ");
